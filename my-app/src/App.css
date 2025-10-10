@@ -1,0 +1,12 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
