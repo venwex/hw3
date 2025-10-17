@@ -1,7 +1,7 @@
 import "./CharacterCard.css";
 
 export default function CharacterCard({character}) {
-    {console.log(character)}
+    //{console.log(character)}
     return (
         <div className="character-card">
             <img src={character.image} alt={character.name} />

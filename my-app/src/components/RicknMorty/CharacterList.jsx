@@ -3,25 +3,33 @@ import "./CharacterList.css";
 import CharacterCard from "./CharacterCard";
 
 export default function CharacterList() {
-    const [characters, setCharacter] = useState([])
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
-
+    const [characters, setCharacters] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
 
     async function loadCharacters() {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
         try {
-            const res = await fetch("https://rickandmortyapi.com/api/character")
-            if (!res.ok) throw new Error(`Http status code: ${res.status}`)
-            const data = await res.json()
-            setCharacter(data.results)
-        } catch(err) {
-            setError(err.message)
+            const res = await fetch("https://rickandmortyapi.com/api/character");
+            if (!res.ok) throw new Error(`Http status code: ${res.status}`);
+            const data = await res.json();
+            setCharacters(data.results);
+        } catch (err) {
+            setError(err.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
+    }
+
+    const filteredCharacters = characters.filter(c =>
+        c.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+    function clearSearch() {
+        setSearch("");
     }
 
     return (
@@ -30,17 +38,34 @@ export default function CharacterList() {
                 {loading ? "Loading..." : "Load Characters"}
             </button>
 
-            {error && <div className="error">Error: {error}</div> }
+            {error && <div className="error">Error: {error}</div>}
+
+            <div className="search-wrapper">
+                <input
+                    type="text"
+                    placeholder="Search characters..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="search-input"
+                />
+                {search && (
+                    <button onClick={clearSearch} className="clear-btn">
+                        Clear
+                    </button>
+                )}
+            </div>
 
             <ul className="character-list">
-                {characters.map(c => {
-                    return (
-                        <li key={c.id}>
-                            <CharacterCard character = {c} />
-                        </li>
-                    )
-                })}
+                {filteredCharacters.map((c) => (
+                    <li key={c.id}>
+                        <CharacterCard character={c} />
+                    </li>
+                ))}
             </ul>
+
+            {filteredCharacters.length === 0 && characters.length > 0 && (
+                <p>No characters found.</p>
+            )}
         </div>
-    )
+    );
 }
