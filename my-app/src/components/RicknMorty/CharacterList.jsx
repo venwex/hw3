@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./CharacterList.css";
 import CharacterCard from "./CharacterCard";
 
@@ -24,8 +24,13 @@ export default function CharacterList() {
         }
     }
 
+    useEffect(() => {
+        loadCharacters();
+    }, []);
+
     const filteredCharacters = characters.filter(c =>
-        c.name.toLowerCase().includes(search.toLowerCase())
+        c.name.toLowerCase().includes(search.toLowerCase()) ||
+        c.species.toLowerCase().includes(search.toLowerCase())
     );
 
     function clearSearch() {
@@ -35,7 +40,7 @@ export default function CharacterList() {
     return (
         <div className="character-list-wrapper">
             <button className="load-btn" onClick={loadCharacters}>
-                {loading ? "Loading..." : "Load Characters"}
+                {loading ? "Loading..." : "Reload Characters"}
             </button>
 
             {error && <div className="error">Error: {error}</div>}
